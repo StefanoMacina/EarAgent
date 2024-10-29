@@ -1,5 +1,49 @@
-html,
-body {
+* {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
+}
+
+:root{
+  --primary: #000000;
+  --background: #000000;
+  --secondary: #000000;
+  --tertiary: #000000;
+}
+
+nav{
+  height: 3.5rem;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  font-size: 1.2rem;
+}
+
+span{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+main{
+  height: 100vh;
+}
+section{
+  height: 100%;
+  display: flex;
+  gap: 1.5rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+button{
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  border: none;
+  font-size: 3rem;
 }
