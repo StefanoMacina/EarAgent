@@ -1,0 +1,10 @@
+{
+  "appId": "com.earagent.com",
+  "appName": "EarAgent",
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}
