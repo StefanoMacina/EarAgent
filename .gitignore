@@ -1,28 +1,29 @@
 
-./client/node_modules/
-./client/.vscode/
-./client/*.map
-./client/.DS_Store
-./client/.sourcemaps
-./client/dist/
+/client/node_modules/
+/client/.vscode/
+/client/*.map
+/client/.DS_Store
+/client/.sourcemaps
+/client/dist/
+/client/.vite/
 
 
 /server/target/
 /server/**/src/main/target/
-.server/**/src/test/target/
+/server/**/src/test/target/
 /server/.mvn/
 /server/.mvn/wrapper/maven-wrapper.jar
 **/target/
 **/.mvn/
 
 ### IntelliJ IDEA ###
-./server/.idea/modules.xml
-./server/.idea/jarRepositories.xml
-./server/.idea/compiler.xml
-./server/.idea/libraries/
-./server/*.iws
-./server/*.iml
-./server/*.ipr
+/server/.idea/modules.xml
+/server/.idea/jarRepositories.xml
+/server/.idea/compiler.xml
+/server/.idea/libraries/
+/server/*.iws
+/server/*.iml
+/server/*.ipr
 
 ### Eclipse ###
 ./server/.apt_generated
