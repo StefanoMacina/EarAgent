@@ -17,6 +17,7 @@
 **/.mvn/
 
 ### IntelliJ IDEA ###
+/server/.idea/
 /server/.idea/modules.xml
 /server/.idea/jarRepositories.xml
 /server/.idea/compiler.xml
