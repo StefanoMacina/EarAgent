@@ -4,9 +4,10 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
+
 public class JavaSoundRecorder {
 
-
+    static final long RECORD_TIME = 60000;
 
     File wavFile = new File("RecordAudio.wav");
 
@@ -15,11 +16,11 @@ public class JavaSoundRecorder {
     TargetDataLine line;
 
     public AudioFormat getAudioFormat() {
-        float sampleRate = 16000;
-        int sampleSizeInBits = 8;
-        int channels = 2;
-        boolean signed = true;
-        boolean bigEndian = true;
+        float sampleRate = 48000; // Use 48000 Hz as supported
+        int sampleSizeInBits = 16; // Use 16 bits for S16_LE
+        int channels = 2; // Stereo
+        boolean signed = true; // S16_LE is signed
+        boolean bigEndian = false; // S16_LE is little-endian
         AudioFormat format = new AudioFormat(sampleRate, sampleSizeInBits,
                 channels, signed, bigEndian);
         return format;
@@ -29,13 +30,13 @@ public class JavaSoundRecorder {
         try {
             AudioFormat format = getAudioFormat();
             DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+            Mixer mixer = AudioSystem.getMixer(AudioSystem.getMixerInfo()[6]);
 
-            // checks if system supports the data line
             if (!AudioSystem.isLineSupported(info)) {
                 System.out.println("Line not supported");
                 System.exit(0);
             }
-            line = (TargetDataLine) AudioSystem.getLine(info);
+            line = (TargetDataLine) mixer.getLine(info);
             line.open(format);
             line.start();   // start capturing
 
@@ -46,7 +47,7 @@ public class JavaSoundRecorder {
             System.out.println("Start recording...");
 
             // start recording
-            AudioSystem.write(ais, fileType, wavFile);
+            AudioSystem.write(ais, AudioFileFormat.Type.WAVE, wavFile);
 
         } catch (LineUnavailableException | IOException ex) {
             ex.printStackTrace();

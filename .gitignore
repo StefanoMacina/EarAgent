@@ -8,6 +8,8 @@
 /client/.vite/
 
 
+/server/*.wav
+/server/*.jar
 /server/target/
 /server/**/src/main/target/
 /server/**/src/test/target/
