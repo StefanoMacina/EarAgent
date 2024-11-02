@@ -7,8 +7,6 @@ import java.io.IOException;
 
 public class JavaSoundRecorder {
 
-    static final long RECORD_TIME = 60000;
-
     File wavFile = new File("RecordAudio.wav");
 
     AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE;

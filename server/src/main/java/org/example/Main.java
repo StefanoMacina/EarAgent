@@ -1,12 +1,16 @@
 package org.example;
 
 
+import java.io.IOException;
+import java.net.ServerSocket;
 
 public class Main {
 
-    static final long RECORD_TIME = 10000;
+    static final long RECORD_TIME = 15000;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
+        ServerSocket server = new ServerSocket(80);
 
         final JavaSoundRecorder recorder = new JavaSoundRecorder();
 
