@@ -30,7 +30,7 @@ public class WebSocketServerEndpoint {
             }
 
             try {
-                Thread.sleep(500); // Piccola pausa per assicurarsi che le risorse audio siano liberate
+                Thread.sleep(10); // Piccola pausa per assicurarsi che le risorse audio siano liberate
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
