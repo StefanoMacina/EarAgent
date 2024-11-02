@@ -1,8 +1,6 @@
 package org.example;
 
-
 import java.io.IOException;
-import java.net.ServerSocket;
 
 public class Main {
 
@@ -10,24 +8,25 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        ServerSocket server = new ServerSocket(80);
+        WebsocketServer server = new WebsocketServer();
+        server.startServer();
 
-        final JavaSoundRecorder recorder = new JavaSoundRecorder();
-
-        Thread stopper = new Thread(new Runnable() {
-            public void run() {
-                try {
-                    Thread.sleep(RECORD_TIME);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-                recorder.finish();
-            }
-        });
-
-        stopper.start();
-
-        recorder.start();
+//        final JavaSoundRecorder recorder = new JavaSoundRecorder();
+//
+//        Thread stopper = new Thread(new Runnable() {
+//            public void run() {
+//                try {
+//                    Thread.sleep(RECORD_TIME);
+//                } catch (InterruptedException ex) {
+//                    ex.printStackTrace();
+//                }
+//                recorder.finish();
+//            }
+//        });
+//
+//        stopper.start();
+//
+//        recorder.start();
 
     }
 
