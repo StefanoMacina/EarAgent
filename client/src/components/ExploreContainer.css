@@ -1,0 +1,39 @@
+#container {
+  position: relative;
+  height: 100%;
+}
+
+#container strong {
+  font-size: 20px;
+  line-height: 26px;
+}
+
+#container p {
+  font-size: 16px;
+  line-height: 22px;
+  color: #8c8c8c;
+  margin: 0;
+}
+
+#container a {
+  text-decoration: none;
+}
+
+#button-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;  
+  position: absolute;
+  bottom: 3rem;
+  right: 50%;
+  transform: translateX(50%);
+}
+
+
+#button{
+  width: 8rem;
+  height: 2rem;
+  border-radius: 1rem;
+  border: none;
+}

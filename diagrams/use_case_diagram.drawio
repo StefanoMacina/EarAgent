@@ -1,0 +1,59 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0" version="24.8.3">
+  <diagram name="Page-1" id="dgPmh6fODjDjjFU-SsA9">
+    <mxGraphModel dx="1434" dy="755" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="xMSitFT205H_lhwnPSmK-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="xMSitFT205H_lhwnPSmK-1" target="xMSitFT205H_lhwnPSmK-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xMSitFT205H_lhwnPSmK-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="xMSitFT205H_lhwnPSmK-1" target="xMSitFT205H_lhwnPSmK-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xMSitFT205H_lhwnPSmK-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="xMSitFT205H_lhwnPSmK-1" target="xMSitFT205H_lhwnPSmK-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xMSitFT205H_lhwnPSmK-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="xMSitFT205H_lhwnPSmK-1" target="xMSitFT205H_lhwnPSmK-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xMSitFT205H_lhwnPSmK-1" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="100" y="410" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="xMSitFT205H_lhwnPSmK-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" target="xMSitFT205H_lhwnPSmK-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="550" y="140" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xMSitFT205H_lhwnPSmK-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" target="xMSitFT205H_lhwnPSmK-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="550" y="140" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xMSitFT205H_lhwnPSmK-3" value="&lt;div&gt;add a node&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="100" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="xMSitFT205H_lhwnPSmK-4" value="&lt;div&gt;add n mic&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="30" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="xMSitFT205H_lhwnPSmK-5" value="&lt;div&gt;add n camera&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="180" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="xMSitFT205H_lhwnPSmK-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="xMSitFT205H_lhwnPSmK-10" target="xMSitFT205H_lhwnPSmK-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xMSitFT205H_lhwnPSmK-10" value="view all nodes" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="353" y="230" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="xMSitFT205H_lhwnPSmK-12" value="delete a node" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="353" y="340" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="xMSitFT205H_lhwnPSmK-13" value="delete a device from a node" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="353" y="450" width="145" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="xMSitFT205H_lhwnPSmK-14" value="add a device from a node" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="353" y="580" width="160" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
