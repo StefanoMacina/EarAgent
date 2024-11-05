@@ -56,7 +56,7 @@ public class JavaSoundRecorder{
             System.out.println("[AUDIO]: Starting audio capture...");
 
             recordingThread = new Thread(() -> {
-                byte[] buffer = new byte[2048];
+                byte[] buffer = new byte[1024];
                 while (running) {
                     try {
                         int bytesRead = line.read(buffer, 0, buffer.length);
