@@ -15,7 +15,6 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
   const audioContextRef = useRef<AudioContext | null>(null);
   const scriptNodeRef = useRef<ScriptProcessorNode | null>(null);
   const audioBufferRef = useRef<number[]>([]);
-  const isAudioInitialized = useRef(false);
   const isStreamRequested = useRef(false);
 
   const convert16BitToFloat32 = (buffer: number[]) => {
@@ -28,9 +27,7 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
     return output;
   };
 
-  const initializeAudioContext = () => {
-    if (isAudioInitialized.current) return;
-
+  const setupAudioProcessor = () => {
     if (!audioContextRef.current) {
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
     }
@@ -60,16 +57,13 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
     };
 
     scriptNode.connect(audioContext.destination);
-    isAudioInitialized.current = true;
   };
 
   const startAudioPlayback = async () => {
     if (isPlaying) return;
 
     try {
-      if (!isAudioInitialized.current) {
-        initializeAudioContext();
-      }
+      setupAudioProcessor();
 
       if (audioContextRef.current?.state === 'suspended') {
         await audioContextRef.current.resume();
@@ -85,6 +79,7 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
   const stopAudioPlayback = () => {
     if (scriptNodeRef.current) {
       scriptNodeRef.current.disconnect();
+      scriptNodeRef.current = null;  // Clear the reference
     }
     setIsPlaying(false);
     audioBufferRef.current = [];
@@ -128,7 +123,6 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
       console.log("WebSocket connection closed");
       setIsConnected(false);
       stopAudioPlayback();
-      isAudioInitialized.current = false;
       isStreamRequested.current = false;
     };
 
@@ -141,7 +135,6 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
       setSocket(null);
       setIsConnected(false);
       stopAudioPlayback();
-      isAudioInitialized.current = false;
       isStreamRequested.current = false;
     } else {
       connectWebSocket();
@@ -170,7 +163,6 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
         socket.close();
       }
       stopAudioPlayback();
-      isAudioInitialized.current = false;
       isStreamRequested.current = false;
     };
   }, [socket]);
