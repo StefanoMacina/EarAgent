@@ -1,20 +1,97 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./ExploreContainer.css";
 
 interface ContainerProps {
   name: string;
 }
 
+const BUFFER_SIZE = 512;
+const MAX_BUFFER_SIZE = BUFFER_SIZE * 4;
+
 const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-  const [scriptNode, setScriptNode] = useState<ScriptProcessorNode | null>(null);
-  const [audioBuffer, setAudioBuffer] = useState<Uint8Array>(new Uint8Array());
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const scriptNodeRef = useRef<ScriptProcessorNode | null>(null);
+  const audioBufferRef = useRef<number[]>([]);
+  const isAudioInitialized = useRef(false);
+  const isStreamRequested = useRef(false);
 
-  // Connect to the WebSocket
-  const connectWebSocket = () => {
+  const convert16BitToFloat32 = (buffer: number[]) => {
+    const l = buffer.length;
+    const output = new Float32Array(l / 2);
+    for (let i = 0; i < l; i += 2) {
+      const int16 = buffer[i] | (buffer[i + 1] << 8);
+      output[i / 2] = int16 >= 0x8000 ? -(0x10000 - int16) / 0x8000 : int16 / 0x7FFF;
+    }
+    return output;
+  };
+
+  const initializeAudioContext = () => {
+    if (isAudioInitialized.current) return;
+
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+    }
+
+    const audioContext = audioContextRef.current;
+    const scriptNode = audioContext.createScriptProcessor(BUFFER_SIZE, 0, 2);
+    scriptNodeRef.current = scriptNode;
+
+    scriptNode.onaudioprocess = (audioProcessingEvent) => {
+      const outputBuffer = audioProcessingEvent.outputBuffer;
+      const leftChannel = outputBuffer.getChannelData(0);
+      const rightChannel = outputBuffer.getChannelData(1);
+
+      const requiredSize = BUFFER_SIZE * 2 * 2;
+      if (audioBufferRef.current.length >= requiredSize) {
+        const chunk = audioBufferRef.current.splice(0, requiredSize);
+        const floatData = convert16BitToFloat32(chunk);
+
+        for (let i = 0; i < BUFFER_SIZE; i++) {
+          leftChannel[i] = floatData[i * 2];
+          rightChannel[i] = floatData[i * 2 + 1];
+        }
+      } else {
+        leftChannel.fill(0);
+        rightChannel.fill(0);
+      }
+    };
+
+    scriptNode.connect(audioContext.destination);
+    isAudioInitialized.current = true;
+  };
+
+  const startAudioPlayback = async () => {
+    if (isPlaying) return;
+
+    try {
+      if (!isAudioInitialized.current) {
+        initializeAudioContext();
+      }
+
+      if (audioContextRef.current?.state === 'suspended') {
+        await audioContextRef.current.resume();
+      }
+
+      setIsPlaying(true);
+      console.log("Audio playback started");
+    } catch (error) {
+      console.error("Error starting audio playback:", error);
+    }
+  };
+
+  const stopAudioPlayback = () => {
+    if (scriptNodeRef.current) {
+      scriptNodeRef.current.disconnect();
+    }
+    setIsPlaying(false);
+    audioBufferRef.current = [];
+    console.log("Audio playback stopped");
+  };
+
+  async function connectWebSocket() {
     const ws = new WebSocket("ws://localhost:8080/java/demoApp");
 
     ws.onopen = () => {
@@ -22,22 +99,22 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
       setIsConnected(true);
     };
 
-    ws.onmessage = (event) => {
+    ws.onmessage = async (event) => {
+      if (!isStreamRequested.current) return;
+      
       if (event.data instanceof Blob) {
-        event.data.arrayBuffer().then((buffer) => {
-          const int8Array = new Uint8Array(buffer);
-          setAudioBuffer((prevBuffer) => {
-            const newBuffer = new Uint8Array(prevBuffer.length + int8Array.length);
-            newBuffer.set(prevBuffer);
-            newBuffer.set(int8Array, prevBuffer.length);
-            return newBuffer;
-          });
-
-          // Start audio playback if not already playing
-          if (!isPlaying) {
-            startAudioPlayback();
+        try {
+          const arrayBuffer = await event.data.arrayBuffer();
+          const int8Array = new Uint8Array(arrayBuffer);
+          
+          audioBufferRef.current.push(...Array.from(int8Array));
+          
+          if (audioBufferRef.current.length > MAX_BUFFER_SIZE) {
+            audioBufferRef.current = audioBufferRef.current.slice(-MAX_BUFFER_SIZE);
           }
-        });
+        } catch (error) {
+          console.error("Error handling audio data:", error);
+        }
       } else {
         console.log("Text message from server:", event.data);
       }
@@ -50,100 +127,51 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
     ws.onclose = () => {
       console.log("WebSocket connection closed");
       setIsConnected(false);
-      stopAudioPlayback(); // Stop playback when socket closes
+      stopAudioPlayback();
+      isAudioInitialized.current = false;
+      isStreamRequested.current = false;
     };
 
     setSocket(ws);
-  };
+  }
 
-  // Start audio playback
-  const startAudioPlayback = () => {
-    if (!audioContext) {
-      const context = new (window.AudioContext || (window as any).webkitAudioContext)();
-      setAudioContext(context);
-    }
-
-    if (audioContext && !isPlaying) {
-      const scriptNode = audioContext.createScriptProcessor(512, 2, 2);
-      setScriptNode(scriptNode);
-
-      scriptNode.onaudioprocess = (audioProcessingEvent) => {
-        const outputBuffer = audioProcessingEvent.outputBuffer;
-        const leftChannel = outputBuffer.getChannelData(0);
-        const rightChannel = outputBuffer.getChannelData(1);
-
-        if (audioBuffer.length >= 1024) {
-          const chunk = audioBuffer.subarray(0, 1024);
-          const floatData = convert16BitToFloat32(chunk);
-          leftChannel.set(floatData.subarray(0, 256));
-          rightChannel.set(floatData.subarray(256));
-          setAudioBuffer((prevBuffer) => prevBuffer.subarray(1024));
-        } else {
-          leftChannel.fill(0);
-          rightChannel.fill(0);
-        }
-      };
-
-      scriptNode.connect(audioContext.destination);
-      setIsPlaying(true);
-      console.log("Audio playback started");
-    }
-  };
-
-  // Stop audio playback
-  const stopAudioPlayback = () => {
-    if (scriptNode) {
-      scriptNode.disconnect();
-      setScriptNode(null);
-    }
-    setIsPlaying(false);
-    console.log("Audio playback stopped");
-  };
-
-  // Convert 16-bit PCM to Float32
-  const convert16BitToFloat32 = (buffer: Uint8Array) => {
-    const float32Array = new Float32Array(buffer.length / 2);
-    for (let i = 0; i < buffer.length; i += 2) {
-      const int16 = buffer[i] | (buffer[i + 1] << 8);
-      float32Array[i / 2] = int16 / 0x7FFF; // Normalize to [-1, 1]
-    }
-    return float32Array;
-  };
-
-  // Handle connection and disconnection
   const handleConnection = () => {
     if (socket && isConnected) {
       socket.close();
       setSocket(null);
       setIsConnected(false);
       stopAudioPlayback();
+      isAudioInitialized.current = false;
+      isStreamRequested.current = false;
     } else {
       connectWebSocket();
     }
   };
 
-  // Handle audio streaming
-  const handleAudioStream = () => {
-    if (socket && isConnected) {
-      if (!isPlaying) {
-        setIsPlaying(true)
-        console.log("Requesting audio stream from server...");
-        socket.send("getAudio"); // Send terminate signal to the server
-      } else {
-        setIsPlaying(false)
-        console.log("Sending terminate command to server...");
-        socket.send("terminate"); // Request audio from the backend
-        stopAudioPlayback();
-      }
+  const handleAudioStream = async () => {
+    if (!socket || !isConnected) return;
+
+    if (!isPlaying) {
+      await startAudioPlayback();
+      isStreamRequested.current = true;
+      socket.send("getAudio");
+      console.log("Requesting audio stream from server...");
+    } else {
+      isStreamRequested.current = false;
+      socket.send("terminate");
+      stopAudioPlayback();
+      console.log("Sending terminate command to server...");
     }
   };
 
   useEffect(() => {
     return () => {
       if (socket) {
-        socket.close(); // Close the socket when the component unmounts
+        socket.close();
       }
-      stopAudioPlayback(); // Stop playback on unmount
+      stopAudioPlayback();
+      isAudioInitialized.current = false;
+      isStreamRequested.current = false;
     };
   }, [socket]);
 
@@ -157,7 +185,7 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
         <div id="button-container">
           <Button
             name={isPlaying ? "Stop Audio" : "Start Audio"}
-            onClick={handleAudioStream} 
+            onClick={handleAudioStream}
           />
           <Button name="Get Video" />
         </div>
