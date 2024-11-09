@@ -1,5 +1,1 @@
-# Compile the Java files
-javac -d . src/main/java/org/example/*.java
-
-# Create the JAR file
-jar cfm EarAgent.jar Manifest.txt -C . org/example
+java -Djava.library.path=lib -jar target/server2-1.0-SNAPSHOT-fat.jar

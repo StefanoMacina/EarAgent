@@ -1,34 +1,32 @@
 package org.example;
 
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.videoio.VideoCapture;
+
 import java.io.IOException;
 
 public class Main {
 
-    static final long RECORD_TIME = 15000;
-
     public static void main(String[] args) throws IOException {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-        WebsocketServer server = new WebsocketServer();
-        server.startServer();
-
-//        final JavaSoundRecorder recorder = new JavaSoundRecorder();
-//
-//        Thread stopper = new Thread(new Runnable() {
-//            public void run() {
-//                try {
-//                    Thread.sleep(RECORD_TIME);
-//                } catch (InterruptedException ex) {
-//                    ex.printStackTrace();
-//                }
-//                recorder.finish();
-//            }
-//        });
-//
-//        stopper.start();
-//
-//        recorder.start();
+//        WebsocketServer server = new WebsocketServer();
+//        server.startServer();
+        VideoCapture camera = new VideoCapture(0);
+        if (!camera.isOpened()) {
+            System.out.println("Error: Cannot open camera!");
+        } else {
+            System.out.println("Camera opened successfully!");
+            Mat frame = new Mat();
+            if (camera.read(frame)) {
+                System.out.println("Frame captured! Size: " + frame.size());
+            }
+            camera.release();
+        }
 
     }
 
 
 }
+

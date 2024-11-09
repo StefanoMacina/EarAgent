@@ -87,7 +87,7 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
   };
 
   async function connectWebSocket() {
-    const ws = new WebSocket("ws://localhost:8080/java/demoApp");
+    const ws = new WebSocket("wss://0b56-37-101-9-109.ngrok-free.app/java/demoApp");
 
     ws.onopen = () => {
       console.log("WebSocket connection established");
